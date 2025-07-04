@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Upload, FileSpreadsheet, CheckCircle, AlertTriangle, Download, MapPin, Zap, Database, RefreshCw } from 'lucide-react';
+import React, { useState, useCallback } from 'react';
+import { Upload, FileSpreadsheet, CheckCircle, AlertTriangle, Download, MapPin, Eye, Zap, Database, RefreshCw } from 'lucide-react';
 import * as XLSX from 'xlsx';
 
 const ProductionSOVProcessor = () => {
@@ -46,8 +46,7 @@ const ProductionSOVProcessor = () => {
     'locationNumber', 'streetAddress', 'country', 'occupancy'
   ];
 
-  // Intelligent multi-sheet analysis (currently unused)
-  /*
+  // Intelligent multi-sheet analysis
   const analyzeWorkbookStructure = async (workbook: XLSX.WorkBook) => {
     const sheetAnalysis: Array<{
       name: string;
@@ -83,6 +82,7 @@ const ProductionSOVProcessor = () => {
       // Determine sheet type and confidence
       const sheetNameLower = sheetName.toLowerCase();
       const headerText = (analysis.headers || []).join(' ').toLowerCase();
+      const allText = jsonData.flat().join(' ').toLowerCase();
       
       // Check for summary sheets (to ignore)
       if (sheetNameLower.includes('summary') || 
@@ -153,10 +153,8 @@ const ProductionSOVProcessor = () => {
     
     return sheetAnalysis;
   };
-  */
 
-  // AI-powered sheet classification using Azure OpenAI (currently unused)
-  /*
+  // AI-powered sheet classification using Azure OpenAI
   const classifySheets = async (sheetAnalysis: any[]) => {
     try {
       const analysisPrompt = `
@@ -214,10 +212,8 @@ const ProductionSOVProcessor = () => {
       }));
     }
   };
-  */
 
-  // Enhanced Excel file processing with multi-sheet analysis (currently unused)
-  /*
+  // Enhanced Excel file processing with multi-sheet analysis
   const processExcelFile = async (file: File) => {
     try {
       const arrayBuffer = await file.arrayBuffer();
@@ -301,10 +297,8 @@ const ProductionSOVProcessor = () => {
       throw new Error(`Failed to process Excel file: ${errorMessage}`);
     }
   };
-  */
 
-  // Azure OpenAI API call function (currently unused)
-  /*
+  // Azure OpenAI API call function
   const callAzureOpenAI = async (prompt: string): Promise<string> => {
     try {
       const response = await fetch('/api/azure-openai', {
@@ -331,10 +325,8 @@ const ProductionSOVProcessor = () => {
       throw error;
     }
   };
-  */
 
-  // AI-powered column mapping using Azure OpenAI (currently unused)
-  /*
+  // AI-powered column mapping using Azure OpenAI
   const performColumnMapping = async (detectedColumns: string[]) => {
     try {
       console.log('Performing column mapping for:', detectedColumns);
@@ -401,7 +393,6 @@ const ProductionSOVProcessor = () => {
       return performFallbackMapping(detectedColumns);
     }
   };
-  */
 
   // Fallback mapping if AI fails
   const performFallbackMapping = (detectedColumns: string[]) => {
@@ -432,8 +423,7 @@ const ProductionSOVProcessor = () => {
     return mapping;
   };
 
-  // Enhanced validation based on your template data (currently unused)
-  /*
+  // Enhanced validation based on your template data
   const performDataValidation = async (mappedData: any[], mapping: Record<string, string | null>) => {
     const issues: Array<{row: number; field: string; issue: string; severity: string}> = [];
     let successfulRows = 0;
@@ -662,7 +652,6 @@ const ProductionSOVProcessor = () => {
       issues: issues.slice(0, 50) // Limit to first 50 issues for display
     };
   };
-  */
 
   // Simplified file processing for debugging
   const processFile = async (file: File) => {
