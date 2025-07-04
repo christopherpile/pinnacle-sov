@@ -653,7 +653,7 @@ const ProductionSOVProcessor = () => {
     };
   };
 
-  // Simplified file processing for debugging
+  // Enhanced file processing with AI capabilities
   const processFile = async (file: File) => {
     setProcessing(true);
     setCurrentStep(1);
@@ -703,12 +703,22 @@ const ProductionSOVProcessor = () => {
       setFileData(simpleFileData);
       setCurrentStep(2);
       
-      // Step 2: Simple column mapping (no AI for now)
-      console.log('Step 2: Simple column mapping...');
-      setProcessingStatus('Mapping columns to standard schema...');
-      const mapping = performFallbackMapping(headers);
-      console.log('Mapping result:', mapping);
-      setProcessingStatus(`Mapped ${Object.keys(mapping).length} columns`);
+      // Step 2: AI-powered column mapping
+      console.log('Step 2: AI-powered column mapping...');
+      setProcessingStatus('Using AI to map columns to standard schema...');
+      
+      let mapping;
+      try {
+        mapping = await performColumnMapping(headers);
+        console.log('AI mapping result:', mapping);
+        setProcessingStatus(`AI mapped ${Object.keys(mapping).length} columns`);
+      } catch (error) {
+        console.log('AI mapping failed, using fallback:', error);
+        setProcessingStatus('AI mapping failed, using fallback mapping...');
+        mapping = performFallbackMapping(headers);
+        console.log('Fallback mapping result:', mapping);
+        setProcessingStatus(`Fallback mapped ${Object.keys(mapping).length} columns`);
+      }
       
       // Step 3: Map data
       console.log('Step 3: Mapping data...');
@@ -737,38 +747,50 @@ const ProductionSOVProcessor = () => {
       setMappingResults(mappingResults);
       setCurrentStep(3);
       
-      // Step 4: Simple validation
-      console.log('Step 4: Basic validation...');
-      setProcessingStatus('Running data quality checks...');
-      const issues: Array<{row: number; field: string; issue: string; severity: string}> = [];
-      let successfulRows = mappedData.length;
-      let errorRows = 0;
-      let warningRows = 0;
+      // Step 4: Enhanced AI validation
+      console.log('Step 4: Enhanced AI validation...');
+      setProcessingStatus('Running AI-powered data quality checks...');
       
-      // Basic validation - just check for critical missing fields
-      mappedData.forEach((row, index) => {
-        criticalFields.forEach(field => {
-          const value = row[field];
-          if (value === null || value === undefined || value === '') {
-            issues.push({
-              row: index + 2,
-              field: field,
-              issue: `Missing required field: ${field}`,
-              severity: 'error'
-            });
-            errorRows++;
-          }
+      let validationResults;
+      try {
+        validationResults = await performDataValidation(mappedData, mapping);
+        console.log('AI validation complete:', validationResults);
+        setProcessingStatus('AI validation complete!');
+      } catch (error) {
+        console.log('AI validation failed, using basic validation:', error);
+        setProcessingStatus('AI validation failed, using basic validation...');
+        
+        // Fallback to basic validation
+        const issues: Array<{row: number; field: string; issue: string; severity: string}> = [];
+        let successfulRows = mappedData.length;
+        let errorRows = 0;
+        let warningRows = 0;
+        
+        // Basic validation - just check for critical missing fields
+        mappedData.forEach((row, index) => {
+          criticalFields.forEach(field => {
+            const value = row[field];
+            if (value === null || value === undefined || value === '') {
+              issues.push({
+                row: index + 2,
+                field: field,
+                issue: `Missing required field: ${field}`,
+                severity: 'error'
+              });
+              errorRows++;
+            }
+          });
         });
-      });
-      
-      const validationResults = {
-        totalRows: mappedData.length,
-        successfulRows: successfulRows - errorRows,
-        warningRows,
-        errorRows,
-        criticalMissing: [],
-        issues: issues.slice(0, 20)
-      };
+        
+        validationResults = {
+          totalRows: mappedData.length,
+          successfulRows: successfulRows - errorRows,
+          warningRows,
+          errorRows,
+          criticalMissing: [],
+          issues: issues.slice(0, 20)
+        };
+      }
       
       console.log('Validation complete:', validationResults);
       setProcessingStatus('Processing complete!');

@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Azure OpenAI API Proxy</title>
+</head>
+<body>
+    <h1>Azure OpenAI API Proxy</h1>
+    <p>This endpoint is for local development testing only.</p>
+    <p>In production, this will be handled by Azure Functions.</p>
+    
+    <script>
+        // Simple proxy for local development
+        if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+            console.log('Local development mode - API calls will be proxied');
+        }
+    </script>
+</body>
+</html> 

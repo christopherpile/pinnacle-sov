@@ -37,4 +37,5 @@ jobs:
         app_location: "/"
         app_build_command: "npm run build"
         output_location: "build"
+        api_location: "api"
         skip_app_build: false  # Let Azure handle the build 
