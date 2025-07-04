@@ -303,7 +303,8 @@ const ProductionSOVProcessor = () => {
   };
   */
 
-  // Azure OpenAI API call function
+  // Azure OpenAI API call function (currently unused)
+  /*
   const callAzureOpenAI = async (prompt: string): Promise<string> => {
     try {
       const response = await fetch('/api/azure-openai', {
@@ -330,6 +331,7 @@ const ProductionSOVProcessor = () => {
       throw error;
     }
   };
+  */
 
   // AI-powered column mapping using Azure OpenAI (currently unused)
   /*
