@@ -3,11 +3,11 @@ import { Upload, FileSpreadsheet, CheckCircle, AlertTriangle, Download, MapPin, 
 import * as XLSX from 'xlsx';
 
 const ProductionSOVProcessor = () => {
-  const [uploadedFile, setUploadedFile] = useState(null);
+  const [uploadedFile, setUploadedFile] = useState<File | null>(null);
   const [processing, setProcessing] = useState(false);
-  const [fileData, setFileData] = useState(null);
-  const [mappingResults, setMappingResults] = useState(null);
-  const [validationResults, setValidationResults] = useState(null);
+  const [fileData, setFileData] = useState<any>(null);
+  const [mappingResults, setMappingResults] = useState<any>(null);
+  const [validationResults, setValidationResults] = useState<any>(null);
   const [currentStep, setCurrentStep] = useState(0);
   const [processingStatus, setProcessingStatus] = useState('');
   const [geocodingInProgress, setGeocodingInProgress] = useState(false);
@@ -424,12 +424,12 @@ const ProductionSOVProcessor = () => {
   };
 
   // Enhanced validation based on your template data
-  const performDataValidation = async (mappedData, mapping) => {
-    const issues = [];
+  const performDataValidation = async (mappedData: any[], mapping: Record<string, string | null>) => {
+    const issues: Array<{row: number; field: string; issue: string; severity: string}> = [];
     let successfulRows = 0;
     let warningRows = 0;
     let errorRows = 0;
-    const criticalMissing = [];
+    const criticalMissing: string[] = [];
 
     // Check for critical missing fields
     criticalFields.forEach(field => {
@@ -654,7 +654,7 @@ const ProductionSOVProcessor = () => {
   };
 
   // Simplified file processing for debugging
-  const processFile = async (file) => {
+  const processFile = async (file: File) => {
     setProcessing(true);
     setCurrentStep(1);
 
@@ -683,9 +683,9 @@ const ProductionSOVProcessor = () => {
         throw new Error('No data found in Excel file');
       }
       
-      const headers = jsonData[0] || [];
-      const dataRows = jsonData.slice(1).filter(row => 
-        row.some(cell => cell !== null && cell !== undefined && cell !== '')
+      const headers = (jsonData[0] || []) as string[];
+      const dataRows = (jsonData.slice(1) as any[][]).filter((row: any[]) => 
+        row.some((cell: any) => cell !== null && cell !== undefined && cell !== '')
       );
       
       console.log('Headers found:', headers);
@@ -714,7 +714,7 @@ const ProductionSOVProcessor = () => {
       console.log('Step 3: Mapping data...');
       setProcessingStatus('Converting data to standard format...');
       const mappedData = dataRows.map((row, rowIndex) => {
-        const mappedRow = {};
+        const mappedRow: Record<string, any> = {};
         headers.forEach((header, colIndex) => {
           const targetField = mapping[header];
           if (targetField) {
@@ -740,7 +740,7 @@ const ProductionSOVProcessor = () => {
       // Step 4: Simple validation
       console.log('Step 4: Basic validation...');
       setProcessingStatus('Running data quality checks...');
-      const issues = [];
+      const issues: Array<{row: number; field: string; issue: string; severity: string}> = [];
       let successfulRows = mappedData.length;
       let errorRows = 0;
       let warningRows = 0;
@@ -780,15 +780,16 @@ const ProductionSOVProcessor = () => {
     } catch (error) {
       console.error('=== PROCESSING ERROR ===');
       console.error('Error details:', error);
-      console.error('Error stack:', error.stack);
-      alert(`Error processing file: ${error.message}`);
+      console.error('Error stack:', error instanceof Error ? error.stack : 'No stack trace');
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+      alert(`Error processing file: ${errorMessage}`);
       setCurrentStep(0);
     } finally {
       setProcessing(false);
     }
   };
 
-  const calculateMappingConfidence = (mapping) => {
+  const calculateMappingConfidence = (mapping: Record<string, string | null>) => {
     const totalColumns = Object.keys(mapping).length;
     const mappedColumns = Object.values(mapping).filter(v => v !== null).length;
     const criticalMapped = criticalFields.filter(field => 
@@ -802,8 +803,8 @@ const ProductionSOVProcessor = () => {
     return (overallRate * 0.5 + criticalRate * 0.5);
   };
 
-  const handleFileUpload = (event) => {
-    const file = event.target.files[0];
+  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
     if (file) {
       setUploadedFile(file);
       setCurrentStep(0);
@@ -825,9 +826,9 @@ const ProductionSOVProcessor = () => {
     const headers = Object.keys(targetSchema);
     const wsData = [headers];
     
-    mappedData.forEach(row => {
+    mappedData.forEach((row: Record<string, any>) => {
       const excelRow = headers.map(header => {
-        const schemaKey = targetSchema[header];
+        const schemaKey = (targetSchema as Record<string, string>)[header];
         return row[schemaKey] || '';
       });
       wsData.push(excelRow);
@@ -984,7 +985,7 @@ const ProductionSOVProcessor = () => {
                       <div>
                         <h4 className="font-medium text-gray-700 mb-3">Sheet Classifications</h4>
                         <div className="space-y-2 max-h-60 overflow-y-auto">
-                          {fileData.workbookAnalysis.classifications.map((sheet, idx) => (
+                          {fileData.workbookAnalysis.classifications.map((sheet: any, idx: number) => (
                             <div key={idx} className={`p-3 rounded border-l-4 ${
                               sheet.shouldProcess 
                                 ? 'bg-green-50 border-green-400' 
@@ -1015,7 +1016,7 @@ const ProductionSOVProcessor = () => {
                       <div>
                         <h4 className="font-medium text-gray-700 mb-3">Data Sheets Processed</h4>
                         <div className="space-y-2">
-                          {fileData.workbookAnalysis.processedSheets.map((sheet, idx) => (
+                          {fileData.workbookAnalysis.processedSheets.map((sheet: any, idx: number) => (
                             <div key={idx} className="p-3 bg-blue-50 rounded border-l-4 border-blue-400">
                               <div className="flex items-center justify-between mb-1">
                                 <span className="font-medium text-gray-900">{sheet.name}</span>
@@ -1061,7 +1062,7 @@ const ProductionSOVProcessor = () => {
                       <div>
                         <h4 className="font-medium text-gray-700 mb-3">Detected Columns ({mappingResults.originalColumns.length})</h4>
                         <div className="space-y-2 max-h-80 overflow-y-auto">
-                          {mappingResults.originalColumns.map((col, idx) => (
+                          {mappingResults.originalColumns.map((col: string, idx: number) => (
                             <div key={idx} className="p-3 bg-gray-50 rounded text-sm border-l-4 border-gray-300">
                               {col}
                             </div>
@@ -1085,7 +1086,7 @@ const ProductionSOVProcessor = () => {
                                   ? 'bg-green-200 text-green-800' 
                                   : 'bg-red-200 text-red-800'
                               }`}>
-                                {mapped || 'Unmapped'}
+                                {mapped ? String(mapped) : 'Unmapped'}
                               </span>
                             </div>
                           ))}
@@ -1131,9 +1132,9 @@ const ProductionSOVProcessor = () => {
                           Critical Fields Missing
                         </h4>
                         <div className="flex flex-wrap gap-2">
-                          {validationResults.criticalMissing.map((field, idx) => (
+                          {validationResults.criticalMissing.map((field: string, idx: number) => (
                             <span key={idx} className="px-3 py-1 bg-red-200 text-red-800 rounded-full text-sm font-medium">
-                              {Object.keys(targetSchema).find(key => targetSchema[key] === field) || field}
+                              {Object.keys(targetSchema).find(key => (targetSchema as Record<string, string>)[key] === field) || field}
                             </span>
                           ))}
                         </div>
@@ -1144,7 +1145,7 @@ const ProductionSOVProcessor = () => {
                     <div>
                       <h4 className="font-semibold text-gray-700 mb-3">Data Quality Issues</h4>
                       <div className="space-y-3 max-h-96 overflow-y-auto">
-                        {validationResults.issues.map((issue, idx) => (
+                        {validationResults.issues.map((issue: {row: number; field: string; issue: string; severity: string}, idx: number) => (
                           <div key={idx} className={`p-4 rounded-lg border-l-4 ${
                             issue.severity === 'error' 
                               ? 'bg-red-50 border-red-400' 
