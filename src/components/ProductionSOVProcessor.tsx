@@ -1,5 +1,5 @@
-import React, { useState, useCallback } from 'react';
-import { Upload, FileSpreadsheet, CheckCircle, AlertTriangle, Download, MapPin, Eye, Zap, Database, RefreshCw } from 'lucide-react';
+import React, { useState } from 'react';
+import { Upload, FileSpreadsheet, CheckCircle, AlertTriangle, Download, MapPin, Zap, Database, RefreshCw } from 'lucide-react';
 import * as XLSX from 'xlsx';
 
 const ProductionSOVProcessor = () => {
@@ -82,7 +82,6 @@ const ProductionSOVProcessor = () => {
       // Determine sheet type and confidence
       const sheetNameLower = sheetName.toLowerCase();
       const headerText = (analysis.headers || []).join(' ').toLowerCase();
-      const allText = jsonData.flat().join(' ').toLowerCase();
       
       // Check for summary sheets (to ignore)
       if (sheetNameLower.includes('summary') || 
@@ -213,7 +212,8 @@ const ProductionSOVProcessor = () => {
     }
   };
 
-  // Enhanced Excel file processing with multi-sheet analysis
+  // Enhanced Excel file processing with multi-sheet analysis (currently unused)
+  /*
   const processExcelFile = async (file: File) => {
     try {
       const arrayBuffer = await file.arrayBuffer();
@@ -297,6 +297,7 @@ const ProductionSOVProcessor = () => {
       throw new Error(`Failed to process Excel file: ${errorMessage}`);
     }
   };
+  */
 
   // Azure OpenAI API call function
   const callAzureOpenAI = async (prompt: string): Promise<string> => {
@@ -326,7 +327,8 @@ const ProductionSOVProcessor = () => {
     }
   };
 
-  // AI-powered column mapping using Azure OpenAI
+  // AI-powered column mapping using Azure OpenAI (currently unused)
+  /*
   const performColumnMapping = async (detectedColumns: string[]) => {
     try {
       console.log('Performing column mapping for:', detectedColumns);
@@ -393,6 +395,7 @@ const ProductionSOVProcessor = () => {
       return performFallbackMapping(detectedColumns);
     }
   };
+  */
 
   // Fallback mapping if AI fails
   const performFallbackMapping = (detectedColumns: string[]) => {
@@ -423,7 +426,8 @@ const ProductionSOVProcessor = () => {
     return mapping;
   };
 
-  // Enhanced validation based on your template data
+  // Enhanced validation based on your template data (currently unused)
+  /*
   const performDataValidation = async (mappedData: any[], mapping: Record<string, string | null>) => {
     const issues: Array<{row: number; field: string; issue: string; severity: string}> = [];
     let successfulRows = 0;
@@ -652,6 +656,7 @@ const ProductionSOVProcessor = () => {
       issues: issues.slice(0, 50) // Limit to first 50 issues for display
     };
   };
+  */
 
   // Simplified file processing for debugging
   const processFile = async (file: File) => {
