@@ -707,7 +707,7 @@ const ProductionSOVProcessor = () => {
       console.log('Step 2: AI-powered column mapping...');
       setProcessingStatus('Using AI to map columns to standard schema...');
       
-      let mapping;
+      let mapping: Record<string, string | null>;
       try {
         mapping = await performColumnMapping(headers);
         console.log('AI mapping result:', mapping);
