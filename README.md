@@ -2,6 +2,12 @@
 
 A production-ready Schedule of Values (SOV) processing application with AI-powered column mapping, multi-sheet analysis, and comprehensive data validation for insurance property data.
 
+## 🚀 Deployment Status
+
+[![Deploy to Azure](https://github.com/christopherpile/pinnacle-sov/actions/workflows/deploy.yml/badge.svg)](https://github.com/christopherpile/pinnacle-sov/actions/workflows/deploy.yml)
+
+This application is automatically deployed to Azure Static Web Apps via GitHub Actions.
+
 ## 🚀 Features
 
 ### **Intelligent Multi-Sheet Processing**
