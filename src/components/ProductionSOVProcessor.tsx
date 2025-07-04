@@ -46,7 +46,8 @@ const ProductionSOVProcessor = () => {
     'locationNumber', 'streetAddress', 'country', 'occupancy'
   ];
 
-  // Intelligent multi-sheet analysis
+  // Intelligent multi-sheet analysis (currently unused)
+  /*
   const analyzeWorkbookStructure = async (workbook: XLSX.WorkBook) => {
     const sheetAnalysis: Array<{
       name: string;
@@ -152,8 +153,10 @@ const ProductionSOVProcessor = () => {
     
     return sheetAnalysis;
   };
+  */
 
-  // AI-powered sheet classification using Azure OpenAI
+  // AI-powered sheet classification using Azure OpenAI (currently unused)
+  /*
   const classifySheets = async (sheetAnalysis: any[]) => {
     try {
       const analysisPrompt = `
@@ -211,6 +214,7 @@ const ProductionSOVProcessor = () => {
       }));
     }
   };
+  */
 
   // Enhanced Excel file processing with multi-sheet analysis (currently unused)
   /*
