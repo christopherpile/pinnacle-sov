@@ -41,8 +41,8 @@ module.exports = async function (context, req) {
                 timestamp: new Date().toISOString(),
                 configuration: {
                     endpoint: 'https://australiaeast.api.cognitive.microsoft.com/ (hardcoded)',
-                    apiKey: process.env.AZURE_OPENAI_API_KEY ? 'Set' : 'Not Set',
-                    deploymentName: 'gpt-35-turbo-0125 (hardcoded)'
+                    apiKey: '767f1504ad29447e8615199eba347e11 (hardcoded)',
+                    deploymentName: 'o3-mini (hardcoded)'
                 }
             }
         };
@@ -66,27 +66,13 @@ module.exports = async function (context, req) {
 
         // Hardcoded Azure OpenAI configuration
         const endpoint = 'https://australiaeast.api.cognitive.microsoft.com/';
-        const apiKey = process.env.AZURE_OPENAI_API_KEY;
+        const apiKey = '767f1504ad29447e8615199eba347e11';
         const deploymentName = 'gpt-35-turbo-0125';
 
         context.log('Azure OpenAI configuration:');
         context.log('Endpoint (hardcoded):', endpoint);
-        context.log('API Key configured:', !!apiKey);
-        context.log('API Key (first 10 chars):', apiKey ? apiKey.substring(0, 10) + '...' : 'NOT SET');
+        context.log('API Key (hardcoded):', apiKey.substring(0, 10) + '...');
         context.log('Deployment name (hardcoded):', deploymentName);
-
-        if (!apiKey) {
-            context.log.error('Azure OpenAI API Key missing');
-            context.res = {
-                status: 500,
-                headers: {
-                    'Access-Control-Allow-Origin': '*',
-                    'Content-Type': 'application/json'
-                },
-                body: { error: 'Azure OpenAI API Key not configured. Please check AZURE_OPENAI_API_KEY environment variable.' }
-            };
-            return;
-        }
 
         const response = await fetch(`${endpoint}/openai/deployments/${deploymentName}/chat/completions?api-version=2024-02-15-preview`, {
             method: 'POST',
