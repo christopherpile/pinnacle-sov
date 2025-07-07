@@ -99,7 +99,26 @@ module.exports = async function (context, req) {
         if (!response.ok) {
             const errorText = await response.text();
             context.log.error(`Azure OpenAI API error: ${response.status} - ${errorText}`);
-            throw new Error(`Azure OpenAI API error: ${response.status}`);
+            context.log.error('Request URL:', `${endpoint}/openai/deployments/${deploymentName}/chat/completions?api-version=2024-02-15-preview`);
+            context.log.error('Request headers:', JSON.stringify({
+                'Content-Type': 'application/json',
+                'api-key': apiKey.substring(0, 10) + '...'
+            }));
+            context.log.error('Request body:', JSON.stringify({
+                messages: [
+                    {
+                        role: 'system',
+                        content: 'You are an expert insurance data processor and Excel file analyzer. Provide clear, accurate responses in JSON format when requested.'
+                    },
+                    {
+                        role: 'user',
+                        content: prompt.substring(0, 200) + '...' // Log first 200 chars of prompt
+                    }
+                ],
+                max_tokens: max_tokens,
+                temperature: temperature
+            }));
+            throw new Error(`Azure OpenAI API error: ${response.status} - ${errorText}`);
         }
 
         const data = await response.json();
