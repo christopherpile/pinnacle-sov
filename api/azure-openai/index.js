@@ -74,7 +74,7 @@ module.exports = async function (context, req) {
         context.log('API Key (hardcoded):', apiKey.substring(0, 10) + '...');
         context.log('Deployment name (hardcoded):', deploymentName);
 
-        const response = await fetch(`${endpoint}/openai/deployments/${deploymentName}/chat/completions?api-version=2024-02-15-preview`, {
+        const response = await fetch(`${endpoint}/openai/deployments/${deploymentName}/chat/completions?api-version=2024-12-01-preview`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -99,7 +99,7 @@ module.exports = async function (context, req) {
         if (!response.ok) {
             const errorText = await response.text();
             context.log.error(`Azure OpenAI API error: ${response.status} - ${errorText}`);
-            context.log.error('Request URL:', `${endpoint}/openai/deployments/${deploymentName}/chat/completions?api-version=2024-02-15-preview`);
+            context.log.error('Request URL:', `${endpoint}/openai/deployments/${deploymentName}/chat/completions?api-version=2024-12-01-preview`);
             context.log.error('Request headers:', JSON.stringify({
                 'Content-Type': 'application/json',
                 'api-key': apiKey.substring(0, 10) + '...'

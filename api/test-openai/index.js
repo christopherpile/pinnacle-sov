@@ -22,7 +22,7 @@ module.exports = async function (context, req) {
 
         const testPrompt = 'Hello, this is a test. Please respond with "Test successful".';
 
-        const response = await fetch(`${endpoint}/openai/deployments/${deploymentName}/chat/completions?api-version=2024-02-15-preview`, {
+        const response = await fetch(`${endpoint}/openai/deployments/${deploymentName}/chat/completions?api-version=2024-12-01-preview`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -58,7 +58,7 @@ module.exports = async function (context, req) {
                     status: response.status,
                     details: errorText,
                     request: {
-                        url: `${endpoint}/openai/deployments/${deploymentName}/chat/completions?api-version=2024-02-15-preview`,
+                        url: `${endpoint}/openai/deployments/${deploymentName}/chat/completions?api-version=2024-12-01-preview`,
                         headers: {
                             'Content-Type': 'application/json',
                             'api-key': apiKey.substring(0, 10) + '...'
