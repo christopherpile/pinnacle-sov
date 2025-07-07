@@ -1,3 +1,5 @@
+const fetch = require('node-fetch');
+
 module.exports = async function (context, req) {
     context.log('Azure OpenAI API called');
 
@@ -35,6 +37,11 @@ module.exports = async function (context, req) {
         const endpoint = process.env.AZURE_OPENAI_ENDPOINT;
         const apiKey = process.env.AZURE_OPENAI_API_KEY;
         const deploymentName = process.env.AZURE_OPENAI_DEPLOYMENT_NAME || 'gpt-35-turbo-0125';
+
+        context.log('Environment variables check:');
+        context.log('Endpoint configured:', !!endpoint);
+        context.log('API Key configured:', !!apiKey);
+        context.log('Deployment name:', deploymentName);
 
         if (!endpoint || !apiKey) {
             context.log.error('Azure OpenAI configuration missing');
