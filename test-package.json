@@ -1,0 +1,12 @@
+{
+  "name": "azure-openai-test",
+  "version": "1.0.0",
+  "description": "Test script for Azure OpenAI API",
+  "main": "test-local.js",
+  "scripts": {
+    "test": "node test-local.js"
+  },
+  "dependencies": {
+    "node-fetch": "^3.3.0"
+  }
+} 

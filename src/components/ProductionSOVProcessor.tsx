@@ -311,8 +311,8 @@ const ProductionSOVProcessor = () => {
         },
         body: JSON.stringify({
           prompt,
-          model: 'gpt-35-turbo-0125', // Azure OpenAI 03-mini equivalent
-          max_tokens: 2000,
+          model: 'o3-mini',
+          max_completion_tokens: 2000,
           temperature: 0.1
         })
       });

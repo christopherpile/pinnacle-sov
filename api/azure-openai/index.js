@@ -50,7 +50,7 @@ module.exports = async function (context, req) {
     }
 
     try {
-        const { prompt, model = 'o3-mini', max_tokens = 2000, temperature = 0.1 } = req.body;
+        const { prompt, model = 'o3-mini', max_completion_tokens = 2000, temperature = 0.1 } = req.body;
 
         if (!prompt) {
             context.res = {
@@ -91,7 +91,7 @@ module.exports = async function (context, req) {
                         content: prompt
                     }
                 ],
-                max_tokens: max_tokens,
+                max_completion_tokens: max_completion_tokens,
                 temperature: temperature
             })
         });
@@ -115,7 +115,7 @@ module.exports = async function (context, req) {
                         content: prompt.substring(0, 200) + '...' // Log first 200 chars of prompt
                     }
                 ],
-                max_tokens: max_tokens,
+                max_completion_tokens: max_completion_tokens,
                 temperature: temperature
             }));
             throw new Error(`Azure OpenAI API error: ${response.status} - ${errorText}`);
