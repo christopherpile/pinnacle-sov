@@ -50,7 +50,7 @@ module.exports = async function (context, req) {
     }
 
     try {
-        const { prompt, model = 'gpt-35-turbo-0125', max_tokens = 2000, temperature = 0.1 } = req.body;
+        const { prompt, model = 'o3-mini', max_tokens = 2000, temperature = 0.1 } = req.body;
 
         if (!prompt) {
             context.res = {
@@ -67,7 +67,7 @@ module.exports = async function (context, req) {
         // Hardcoded Azure OpenAI configuration
         const endpoint = 'https://australiaeast.api.cognitive.microsoft.com/';
         const apiKey = '767f1504ad29447e8615199eba347e11';
-        const deploymentName = 'gpt-35-turbo-0125';
+        const deploymentName = 'o3-mini';
 
         context.log('Azure OpenAI configuration:');
         context.log('Endpoint (hardcoded):', endpoint);
