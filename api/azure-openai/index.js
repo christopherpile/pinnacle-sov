@@ -1,4 +1,10 @@
-const fetch = require('node-fetch');
+// Use global fetch if available (Node 18+), otherwise require node-fetch
+let fetch;
+if (typeof globalThis.fetch === 'function') {
+    fetch = globalThis.fetch;
+} else {
+    fetch = require('node-fetch');
+}
 
 module.exports = async function (context, req) {
     context.log('Azure OpenAI API called');
@@ -14,6 +20,27 @@ module.exports = async function (context, req) {
                 'Access-Control-Max-Age': '86400'
             },
             body: ''
+        };
+        return;
+    }
+
+    // Handle GET requests for health check
+    if (req.method === 'GET') {
+        context.res = {
+            status: 200,
+            headers: {
+                'Access-Control-Allow-Origin': '*',
+                'Content-Type': 'application/json'
+            },
+            body: {
+                message: 'Azure OpenAI API is running',
+                timestamp: new Date().toISOString(),
+                environment: {
+                    endpoint: process.env.AZURE_OPENAI_ENDPOINT ? 'Set' : 'Not Set',
+                    apiKey: process.env.AZURE_OPENAI_API_KEY ? 'Set' : 'Not Set',
+                    deploymentName: process.env.AZURE_OPENAI_DEPLOYMENT_NAME || 'Not Set'
+                }
+            }
         };
         return;
     }
@@ -40,7 +67,9 @@ module.exports = async function (context, req) {
 
         context.log('Environment variables check:');
         context.log('Endpoint configured:', !!endpoint);
+        context.log('Endpoint value:', endpoint);
         context.log('API Key configured:', !!apiKey);
+        context.log('API Key (first 10 chars):', apiKey ? apiKey.substring(0, 10) + '...' : 'NOT SET');
         context.log('Deployment name:', deploymentName);
 
         if (!endpoint || !apiKey) {

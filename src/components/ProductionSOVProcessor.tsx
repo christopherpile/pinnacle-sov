@@ -301,8 +301,10 @@ const ProductionSOVProcessor = () => {
   // Azure OpenAI API call function
   const callAzureOpenAI = async (prompt: string): Promise<string> => {
     try {
-      console.log('Calling Azure OpenAI API...');
-      const response = await fetch('/api/azure-openai', {
+      const apiUrl = '/api/azure-openai';
+      console.log('Calling Azure OpenAI API at:', apiUrl);
+      console.log('Full URL would be:', window.location.origin + apiUrl);
+      const response = await fetch(apiUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
