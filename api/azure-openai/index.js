@@ -7,7 +7,11 @@ if (typeof globalThis.fetch === 'function') {
 }
 
 module.exports = async function (context, req) {
-    context.log('Azure OpenAI API called');
+    context.log('=== Azure OpenAI API called ===');
+    context.log('Request method:', req.method);
+    context.log('Request URL:', req.url);
+    context.log('Request headers:', JSON.stringify(req.headers));
+    context.log('Environment variables available:', Object.keys(process.env).filter(key => key.includes('AZURE_OPENAI')));
 
     // Handle CORS preflight requests
     if (req.method === 'OPTIONS') {
