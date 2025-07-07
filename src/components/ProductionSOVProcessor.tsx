@@ -301,6 +301,7 @@ const ProductionSOVProcessor = () => {
   // Azure OpenAI API call function
   const callAzureOpenAI = async (prompt: string): Promise<string> => {
     try {
+      console.log('Calling Azure OpenAI API...');
       const response = await fetch('/api/azure-openai', {
         method: 'POST',
         headers: {
@@ -314,11 +315,17 @@ const ProductionSOVProcessor = () => {
         })
       });
 
+      console.log('API Response status:', response.status);
+      console.log('API Response headers:', response.headers);
+
       if (!response.ok) {
-        throw new Error(`Azure OpenAI API error: ${response.status}`);
+        const errorText = await response.text();
+        console.error('API Error response:', errorText);
+        throw new Error(`Azure OpenAI API error: ${response.status} - ${errorText}`);
       }
 
       const data = await response.json();
+      console.log('API Response data:', data);
       return data.choices?.[0]?.message?.content || '';
     } catch (error) {
       console.error('Azure OpenAI API call failed:', error);

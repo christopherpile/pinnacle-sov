@@ -1,12 +1,31 @@
 module.exports = async function (context, req) {
     context.log('Azure OpenAI API called');
 
+    // Handle CORS preflight requests
+    if (req.method === 'OPTIONS') {
+        context.res = {
+            status: 200,
+            headers: {
+                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+                'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+                'Access-Control-Max-Age': '86400'
+            },
+            body: ''
+        };
+        return;
+    }
+
     try {
         const { prompt, model = 'gpt-35-turbo-0125', max_tokens = 2000, temperature = 0.1 } = req.body;
 
         if (!prompt) {
             context.res = {
                 status: 400,
+                headers: {
+                    'Access-Control-Allow-Origin': '*',
+                    'Content-Type': 'application/json'
+                },
                 body: { error: 'Prompt is required' }
             };
             return;
@@ -19,9 +38,15 @@ module.exports = async function (context, req) {
 
         if (!endpoint || !apiKey) {
             context.log.error('Azure OpenAI configuration missing');
+            context.log.error('Endpoint:', endpoint ? 'Set' : 'Missing');
+            context.log.error('API Key:', apiKey ? 'Set' : 'Missing');
             context.res = {
                 status: 500,
-                body: { error: 'Azure OpenAI not configured' }
+                headers: {
+                    'Access-Control-Allow-Origin': '*',
+                    'Content-Type': 'application/json'
+                },
+                body: { error: 'Azure OpenAI not configured. Please check environment variables.' }
             };
             return;
         }
@@ -59,6 +84,7 @@ module.exports = async function (context, req) {
         context.res = {
             status: 200,
             headers: {
+                'Access-Control-Allow-Origin': '*',
                 'Content-Type': 'application/json'
             },
             body: data
@@ -68,6 +94,10 @@ module.exports = async function (context, req) {
         context.log.error('Error in Azure OpenAI function:', error);
         context.res = {
             status: 500,
+            headers: {
+                'Access-Control-Allow-Origin': '*',
+                'Content-Type': 'application/json'
+            },
             body: { 
                 error: 'Internal server error',
                 details: error.message 
