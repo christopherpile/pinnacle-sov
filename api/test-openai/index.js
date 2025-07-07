@@ -35,8 +35,7 @@ module.exports = async function (context, req) {
                         content: testPrompt
                     }
                 ],
-                max_completion_tokens: 100,
-                temperature: 0.1
+                max_completion_tokens: 100
             })
         });
 

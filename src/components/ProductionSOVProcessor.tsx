@@ -312,8 +312,7 @@ const ProductionSOVProcessor = () => {
         body: JSON.stringify({
           prompt,
           model: 'o3-mini',
-          max_completion_tokens: 2000,
-          temperature: 0.1
+          max_completion_tokens: 2000
         })
       });
 
