@@ -10,10 +10,27 @@ module.exports = async function (context, req) {
     context.log('=== Test Azure OpenAI API ===');
 
     try {
-        // Hardcoded Azure OpenAI configuration
-        const endpoint = 'https://australiaeast.api.cognitive.microsoft.com/';
-        const apiKey = '767f1504ad29447e8615199eba347e11';
-        const deploymentName = 'o3-mini';
+        // Get Azure OpenAI configuration from environment variables
+        const endpoint = process.env.AZURE_OPENAI_ENDPOINT;
+        const apiKey = process.env.AZURE_OPENAI_API_KEY;
+        const deploymentName = process.env.AZURE_OPENAI_DEPLOYMENT_NAME || 'o3-mini';
+
+        if (!endpoint || !apiKey) {
+            context.log.error('Azure OpenAI configuration missing');
+            context.res = {
+                status: 500,
+                headers: {
+                    'Access-Control-Allow-Origin': '*',
+                    'Content-Type': 'application/json'
+                },
+                body: {
+                    error: 'Azure OpenAI not configured',
+                    endpoint: !!endpoint,
+                    apiKey: !!apiKey
+                }
+            };
+            return;
+        }
 
         context.log('Testing with configuration:');
         context.log('Endpoint:', endpoint);

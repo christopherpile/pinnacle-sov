@@ -40,9 +40,9 @@ module.exports = async function (context, req) {
                 message: 'Azure OpenAI API is running',
                 timestamp: new Date().toISOString(),
                 configuration: {
-                    endpoint: 'https://australiaeast.api.cognitive.microsoft.com/ (hardcoded)',
-                    apiKey: '767f1504ad29447e8615199eba347e11 (hardcoded)',
-                    deploymentName: 'o3-mini (hardcoded)'
+                    endpoint: process.env.AZURE_OPENAI_ENDPOINT ? 'Set' : 'Not Set',
+                    apiKey: process.env.AZURE_OPENAI_API_KEY ? 'Set' : 'Not Set',
+                    deploymentName: process.env.AZURE_OPENAI_DEPLOYMENT_NAME || 'o3-mini (default)'
                 }
             }
         };
@@ -64,15 +64,32 @@ module.exports = async function (context, req) {
             return;
         }
 
-        // Hardcoded Azure OpenAI configuration
-        const endpoint = 'https://australiaeast.api.cognitive.microsoft.com/';
-        const apiKey = '767f1504ad29447e8615199eba347e11';
-        const deploymentName = 'o3-mini';
+        // Get Azure OpenAI configuration from environment variables
+        const endpoint = process.env.AZURE_OPENAI_ENDPOINT;
+        const apiKey = process.env.AZURE_OPENAI_API_KEY;
+        const deploymentName = process.env.AZURE_OPENAI_DEPLOYMENT_NAME || 'o3-mini';
 
         context.log('Azure OpenAI configuration:');
-        context.log('Endpoint (hardcoded):', endpoint);
-        context.log('API Key (hardcoded):', apiKey.substring(0, 10) + '...');
-        context.log('Deployment name (hardcoded):', deploymentName);
+        context.log('Endpoint configured:', !!endpoint);
+        context.log('Endpoint value:', endpoint);
+        context.log('API Key configured:', !!apiKey);
+        context.log('API Key (first 10 chars):', apiKey ? apiKey.substring(0, 10) + '...' : 'NOT SET');
+        context.log('Deployment name:', deploymentName);
+
+        if (!endpoint || !apiKey) {
+            context.log.error('Azure OpenAI configuration missing');
+            context.log.error('Endpoint:', endpoint ? 'Set' : 'Missing');
+            context.log.error('API Key:', apiKey ? 'Set' : 'Missing');
+            context.res = {
+                status: 500,
+                headers: {
+                    'Access-Control-Allow-Origin': '*',
+                    'Content-Type': 'application/json'
+                },
+                body: { error: 'Azure OpenAI not configured. Please check environment variables.' }
+            };
+            return;
+        }
 
         const response = await fetch(`${endpoint}/openai/deployments/${deploymentName}/chat/completions?api-version=2024-12-01-preview`, {
             method: 'POST',
